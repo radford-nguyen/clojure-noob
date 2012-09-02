@@ -1,7 +1,7 @@
 
-(load-file "algos.clj")
-(load-file "tests.clj")
-(load-file "seeds.clj")
+;;(load-file "algos.clj")
+;;(load-file "tests.clj")
+;;(load-file "seeds.clj")
 
 (refer 'clojure-noob.markov.core)
 (refer 'clojure-noob.markov.seeds)

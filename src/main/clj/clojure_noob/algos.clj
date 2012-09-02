@@ -1,4 +1,4 @@
-(ns clojure-noob.markov.core
+(ns clojure-noob.algos
   "Contains core functions for processing text, generating
   index data, and using that data to generate new text")
 
