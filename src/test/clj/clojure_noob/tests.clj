@@ -1,4 +1,4 @@
-(ns clojure-noob.markov.core (:use clojure.test))
+(ns clojure-noob.tests (:use clojure.test))
 
 
 

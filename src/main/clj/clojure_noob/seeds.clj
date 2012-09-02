@@ -1,4 +1,4 @@
-(ns clojure-noob.markov.seeds)
+(ns clojure-noob.seeds)
 
 (def blurb-seed
   "As usual, this being a 1.3.x release, I haven't even compiled this kernel yet. So if it works, you should be doubly impressed. - Linus Torvalds, announcing kernel 1.3.3 on the linux-kernel mailing list.
