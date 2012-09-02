@@ -1,4 +1,6 @@
-(ns clojure-noob.tests (:use clojure.test))
+(ns clojure-noob.tests
+  (:use clojure.test
+        clojure-noob.algos))
 
 
 
@@ -67,7 +69,8 @@
 
 
 
-(import '(java.util.concurrent Executors))
+(import '(java.util.concurrent Executors)
+        '(java.util.concurrent TimeUnit))
 
 (def pool (Executors/newFixedThreadPool
              (+ 2 (.availableProcessors (Runtime/getRuntime)))))
@@ -76,7 +79,8 @@
          (let [corpus (atom {})]
            (dotimes [t 10]
              (.submit pool #(dotimes [e 100] (add-word ["i"] "word" corpus))))
-           (. Thread (sleep 3000))
+           (.shutdown pool)
+           (.awaitTermination pool 3 TimeUnit/SECONDS)
            (is (= (count (@corpus ["i"])) 1000))))
 
 
