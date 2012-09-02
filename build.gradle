@@ -1,6 +1,6 @@
 buildscript {
    repositories {
-      flatDir dirs: file("lib")
+      flatDir dirs: file("lib/buildscript")
    }
    dependencies {
       classpath ":clojuresque:1.5.2"
@@ -25,4 +25,6 @@ dependencies {
 
 sourceSets.main.clojure { srcDir "src/main/clj" }
 sourceSets.test.clojure { srcDir "src/test/clj" }
+
+uberjar.enabled = true
 
