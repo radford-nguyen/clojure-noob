@@ -15,6 +15,14 @@ task mkwrapper(type:Wrapper) {
 }
 
 repositories {
+   mavenCentral()
    clojarsRepo()
 }
+
+dependencies {
+   compile "org.clojure:clojure:1.4.0"
+}
+
+sourceSets.main.clojure { srcDir "src/main/clj" }
+sourceSets.test.clojure { srcDir "src/test/clj" }
 
