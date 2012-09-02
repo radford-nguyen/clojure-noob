@@ -1,0 +1,20 @@
+buildscript {
+   repositories {
+      flatDir dirs: file("lib")
+   }
+   dependencies {
+      classpath ":clojuresque:1.5.2"
+   }
+}
+
+
+apply plugin: "clojure"
+
+task mkwrapper(type:Wrapper) {
+   gradleVersion = "1.1"
+}
+
+repositories {
+   clojarsRepo()
+}
+
