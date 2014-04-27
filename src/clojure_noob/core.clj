@@ -1,7 +1,6 @@
 (ns clojure-noob.core
   (:gen-class)
-  (:use clojure-noob.algos)
-  (:use clojure-noob.seeds))
+  (:use clojure-noob.algos))
 
 (defn sentence-generator [seed-data & {depth :markov-depth :or {depth 1}}]
   (let [corpus (atom {})]
