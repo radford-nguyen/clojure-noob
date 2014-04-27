@@ -1,4 +1,5 @@
-(ns clojure-noob.main
+(ns clojure-noob.core
+  (:gen-class)
   (:use clojure-noob.algos)
   (:use clojure-noob.seeds))
   
@@ -18,4 +19,8 @@
 (def f1 (sentence-generator blurb-seed :markov-depth 1))
 (def f3 (sentence-generator blurb-seed :markov-depth 3))
 
+(defn -main
+  "I don't do a whole lot ... yet."
+  [& args]
+  (println "Hello, World!"))
 

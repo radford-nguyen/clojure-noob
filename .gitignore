@@ -6,5 +6,7 @@ build
 bin
 .project
 .classpath
+target
+.lein-failures
 
 
