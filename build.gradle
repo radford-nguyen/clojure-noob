@@ -23,8 +23,8 @@ dependencies {
    compile "org.clojure:clojure:1.4.0"
 }
 
-sourceSets.main.clojure { srcDir "src/main/clj" }
-sourceSets.test.clojure { srcDir "src/test/clj" }
+sourceSets.main.clojure { srcDir "src/" }
+sourceSets.test.clojure { srcDir "test/" }
 
 uberjar.enabled = true
 

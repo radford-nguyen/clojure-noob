@@ -17,19 +17,21 @@ the programming journey, so to speak.
 Building clojure-noob
 ---------------------
 
-clojure-noob is built using the [Gradle][1] build tool, which
-I happen to think is really sweet.  To see a list of build
-tasks, run:
+clojure-noob can be built with either [Leiningen][1] or [Gradle][2].
 
-    $ ./gradlew tasks
+    $ ./lein build
+    $ ./gradlew build
 
-The build will automatically download any dependencies it
-needs, including Gradle itself!  The only thing you need to
+The build will automatically download any dependencies it needs,
+including Leiningen/Gradle itself.  The only thing you need to
 have pre-installed is a Java 5+ JDK.
 
-### Build Artifacts
+[1]: http://leiningen.org/     "Leiningen"
+[2]: http://gradle.org/     "Gradle"
 
-**TODO**
 
+## License
 
-[1]: http://www.gradle.org/     "Gradle"
+Copyright © 2014 radford-nguyen
+
+Distributed under the Eclipse Public License, the same as Clojure.

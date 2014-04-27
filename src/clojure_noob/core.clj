@@ -1,10 +1,8 @@
-
-;;(load-file "algos.clj")
-;;(load-file "tests.clj")
-;;(load-file "seeds.clj")
-
-(refer 'clojure-noob.markov.core)
-(refer 'clojure-noob.markov.seeds)
+(ns clojure-noob.core
+  (:gen-class)
+  (:use clojure-noob.algos)
+  (:use clojure-noob.seeds))
+  
 
 (defn sentence-generator [seed-data & {depth :markov-depth :or {depth 1}}]
   (let [corpus (atom {})]
@@ -21,5 +19,8 @@
 (def f1 (sentence-generator blurb-seed :markov-depth 1))
 (def f3 (sentence-generator blurb-seed :markov-depth 3))
 
-(clojure.test/run-tests 'clojure-noob.markov.core)
+(defn -main
+  "I don't do a whole lot ... yet."
+  [& args]
+  (println "Hello, World!"))
 

@@ -1,6 +1,17 @@
 (ns clojure-noob.algos
-  "Contains core functions for processing text, generating
-  index data, and using that data to generate new text")
+  "Contains core functions for modeling text using a Markov
+  Chain and generating realistic-looking random text using
+  that index data. The Markov Chain is represented as a
+  map {f s} where:
+  
+  f         = vector of words
+  (count f) = Markov depth
+  s         = vector of following words
+  
+  The vector s may contain duplicate words, which indicate
+  that they appeared more than once following words f. Contrast
+  this approach with storing the frequency information explicitly
+  in a map.")
 
 
 (defn last-of-sentence? [word]
@@ -26,7 +37,7 @@
 
 
 (defn get-word [words, freq-hash]
-  "Given a seq of words, produces the next word probabilistically
+  "Given a vector of words, produces the next word probabilistically
   from the frequency hash. If words does not exist in
   freq-hash, then a random word is returned."
   (if-let [next-words (freq-hash words)]
