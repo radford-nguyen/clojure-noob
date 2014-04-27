@@ -14,20 +14,20 @@ any pains to make it particularly good at generating very
 "random" or "believable" text, as I am more concerned with
 the programming journey, so to speak.
 
-Running clojure-noob
+Building clojure-noob
 ---------------------
 
-clojure-noob is built using [Leiningen][1], like most clojure
-projects. You can build and run the project by doing:
+clojure-noob can be built with either [Leiningen][1] or [Gradle][2].
 
-    $ lein run
+    $ ./lein build
+    $ ./gradlew build
 
-The build will automatically download any dependencies it
-needs, including Leiningen itself.  The only thing you need to
+The build will automatically download any dependencies it needs,
+including Leiningen/Gradle itself.  The only thing you need to
 have pre-installed is a Java 5+ JDK.
 
-
 [1]: http://leiningen.org/     "Leiningen"
+[2]: http://gradle.org/     "Gradle"
 
 
 ## License
