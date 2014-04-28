@@ -39,25 +39,25 @@
   (is (= 3 (count (words-from "One== Two34 Three.")))))
 
 (deftest test-get-word
-  (is (string? (get-word ["The"] depth1-corpus)))
-  (is (string? (get-word ["not-in-corpus"] depth1-corpus)))
-  (is (string? (get-word ["The" "cat" "is"] depth3-corpus)))
-  (is (string? (get-word ["not" "in" "corpus"] depth3-corpus))))
+  (is (string? (#'clojure-noob.algos/get-word ["The"] depth1-corpus)))
+  (is (string? (#'clojure-noob.algos/get-word ["not-in-corpus"] depth1-corpus)))
+  (is (string? (#'clojure-noob.algos/get-word ["The" "cat" "is"] depth3-corpus)))
+  (is (string? (#'clojure-noob.algos/get-word ["not" "in" "corpus"] depth3-corpus))))
 
 (deftest test-update-freq-hash
   (let [key ["I" "am"]
         hash
-        (update-freq-hash {key ["retarded."]} ["I" "am"] "cool.")]
+        (#'clojure-noob.algos/update-freq-hash {key ["retarded."]} ["I" "am"] "cool.")]
     (is (= 1 (count hash)))
     (is (= (hash ["I" "am"]) ["retarded." "cool."]))))
 
 (deftest test-get-first-words
-  (is (= 1 (count (get-first-words depth1-corpus))))
-  (is (= 3 (count (get-first-words depth3-corpus)))))
+  (is (= 1 (count (#'clojure-noob.algos/get-first-words depth1-corpus))))
+  (is (= 3 (count (#'clojure-noob.algos/get-first-words depth3-corpus)))))
 
 (deftest test-index-start-words
   (let [hash
-        (index-start-words {} ["i" "am" "sofa" "king" "we" "todd." "did"])]
+        (#'clojure-noob.algos/index-start-words {} ["i" "am" "sofa" "king" "we" "todd." "did"])]
     (is (= (hash :starter-index) #{"did"}))))
 
 (deftest test-process-text
