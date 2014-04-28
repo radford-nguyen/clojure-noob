@@ -26,5 +26,15 @@ dependencies {
 sourceSets.main.clojure { srcDir "src/" }
 sourceSets.test.clojure { srcDir "test/" }
 
+aotCompile = true
+uberjar {
+   manifest {
+      attributes 'Implementation-Title': project.name,
+                 'Implementation-Version': project.version,
+                 'Built-By': System.getProperty('user.name'),
+                 'Main-Class':'clojure_noob.core'
+   }
+}
+
 uberjar.enabled = true
 
