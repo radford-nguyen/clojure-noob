@@ -19,12 +19,15 @@ Building clojure-noob
 
 clojure-noob can be built with either [Leiningen][1] or [Gradle][2].
 
-    $ ./lein build
-    $ ./gradlew build
+    $ ./lein uberjar
+    $ ./gradlew uberjar
 
 The build will automatically download any dependencies it needs,
 including Leiningen/Gradle itself.  The only thing you need to
 have pre-installed is a Java 5+ JDK.
+
+Once the build has completed, you will find a fat jar in the
+build folder (different for each build tool.)
 
 [1]: http://leiningen.org/     "Leiningen"
 [2]: http://gradle.org/     "Gradle"
