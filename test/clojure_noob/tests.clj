@@ -40,14 +40,14 @@
 
 (deftest test-get-word
   (is (string? (#'clojure-noob.algos/get-word ["The"] depth1-chain)))
-  (is (string? (#'clojure-noob.algos/get-word ["not-in-chain"] depth1-mchain)))
+  (is (string? (#'clojure-noob.algos/get-word ["not-in-chain"] depth1-chain)))
   (is (string? (#'clojure-noob.algos/get-word ["The" "cat" "is"] depth3-chain)))
-  (is (string? (#'clojure-noob.algos/get-word ["not" "in" "chain"] depth3-mchain))))
+  (is (string? (#'clojure-noob.algos/get-word ["not" "in" "chain"] depth3-chain))))
 
-(deftest test-update-freq-hash
+(deftest test-update-chain
   (let [key ["I" "am"]
         hash
-        (#'clojure-noob.algos/update-freq-hash {key ["retarded."]} ["I" "am"] "cool.")]
+        (#'clojure-noob.algos/update-chain {key ["retarded."]} ["I" "am"] "cool.")]
     (is (= 1 (count hash)))
     (is (= (hash ["I" "am"]) ["retarded." "cool."]))))
 
@@ -61,11 +61,11 @@
     (is (= (hash :starter-index) #{"did"}))))
 
 (deftest test-process-text
-  (let [depth1 (atom {}) depth3 (atom {})]
-    (process-text test-data depth1 :depth 1)
-    (process-text test-data depth3 :depth 3)
-    (is (= depth1-chain @depth1))
-    (is (= depth3-chain @depth3))))
+  (let [depth1 (process-text test-data :depth 1)
+        depth3 (process-text test-data :depth 3)]
+    
+    (is (= depth1-chain depth1))
+    (is (= depth3-chain depth3))))
 
 
 (import '(java.util.concurrent Executors)
@@ -77,7 +77,7 @@
 (deftest test-add-word-threadsafe
   (let [chain (atom {})]
     (dotimes [t 10]
-      (.submit pool #(dotimes [e 100] (add-word ["i"] "word" chain))))
+      (.submit pool #(dotimes [e 100] (#'clojure-noob.algos/add-word ["i"] "word" chain))))
     (.shutdown pool)
     (.awaitTermination pool 3 TimeUnit/SECONDS)
     (is (= (count (@chain ["i"])) 1000))))

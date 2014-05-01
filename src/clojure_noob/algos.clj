@@ -64,20 +64,13 @@
     (assoc chain :starter-index #{(last prev-words)})))
 
 
-
-
-
-
-
-
-
-(defn add-word [prev-words, next-word, ^clojure.lang.Atom chain]
+(defn- add-word [prev-words, next-word, chain]
   (swap! chain update-chain prev-words next-word))
 
 
-(defn process-word-list
+(defn- process-word-list
   
-  [word-list, ^clojure.lang.Atom chain
+  [word-list, chain
    & {store-first :store-first depth :depth :or {depth 1}}]
 
   (let [prev-words (subvec word-list 0 depth)]
@@ -92,12 +85,14 @@
 
 
 (defn process-text
-  "Processes the given text and stores its data in the
-  given chain Atom. The atom is a map (m) that holds the markov
-  data indexed from the text."
-  [^String text, ^clojure.lang.Atom chain & {depth :depth :or {depth 1}}]
-  (let [data (words-from text)]
-    (process-word-list data chain :depth depth)))
+  "Processes the given text and returns a markov chain
+  representing that text. You may specify an optional
+  depth for the chain (default 1)."
+  [text & {depth :depth :or {depth 1}}]
+  (let [chain (atom {})
+        data (words-from (str text))]
+    (process-word-list data chain :depth depth)
+    @chain))
 
 ; (defn gen-freq-data [^String from & {nthreads :nthreads :or {nthreads 1}}]
 ;   (let [chain (atom {})]
@@ -105,20 +100,19 @@
 ;       (fn [] (apply process-text [from chain]) :threads nthreads))
 ;     @chain))
 
-(defn make-sentence
-  "Returns a random sentence, generated from the given chain Atom."
-  [chain
-    & {partial-sentence :partial-sentence
-       depth :depth
-       :or {partial-sentence (get-first-words chain) depth 1}}]
+(defn- make-sentence-recursive
+  [chain partial-sentence depth]
   (if (last-of-sentence? (last partial-sentence))
     (clojure.string/join " " partial-sentence)
     (recur chain
-           {:partial-sentence
-            (conj partial-sentence
-                  (get-word (subvec partial-sentence (- (count partial-sentence) depth)) chain))
-           :depth
-            depth})))
+           (conj partial-sentence
+                 (get-word (subvec partial-sentence (- (count partial-sentence) depth)) chain))
+           depth)))
+
+(defn make-sentence
+  "Returns a random sentence, generated from the given markov chain."
+  [chain & {depth :depth :or {depth 1}}]
+  (make-sentence-recursive chain (get-first-words chain) depth))
 
 
 
