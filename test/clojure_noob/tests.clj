@@ -7,7 +7,7 @@
 (def ^:private test-data
   "The cat is happy. The dog is sad. I am retarded.")
 
-(def ^:private depth1-corpus
+(def ^:private depth1-chain
   {["The"] ["cat" "dog"]
    ["cat"] ["is"]
    ["dog"] ["is"]
@@ -18,7 +18,7 @@
    ["am"] ["retarded."]
    :starter-index #{"The" "I"}})
 
-(def ^:private depth3-corpus
+(def ^:private depth3-chain
   {["The" "cat" "is"] ["happy."]
    ["cat" "is" "happy."] ["The"]
    ["is" "happy." "The"] ["dog"]
@@ -39,10 +39,10 @@
   (is (= 3 (count (words-from "One== Two34 Three.")))))
 
 (deftest test-get-word
-  (is (string? (#'clojure-noob.algos/get-word ["The"] depth1-corpus)))
-  (is (string? (#'clojure-noob.algos/get-word ["not-in-corpus"] depth1-corpus)))
-  (is (string? (#'clojure-noob.algos/get-word ["The" "cat" "is"] depth3-corpus)))
-  (is (string? (#'clojure-noob.algos/get-word ["not" "in" "corpus"] depth3-corpus))))
+  (is (string? (#'clojure-noob.algos/get-word ["The"] depth1-chain)))
+  (is (string? (#'clojure-noob.algos/get-word ["not-in-chain"] depth1-mchain)))
+  (is (string? (#'clojure-noob.algos/get-word ["The" "cat" "is"] depth3-chain)))
+  (is (string? (#'clojure-noob.algos/get-word ["not" "in" "chain"] depth3-mchain))))
 
 (deftest test-update-freq-hash
   (let [key ["I" "am"]
@@ -52,8 +52,8 @@
     (is (= (hash ["I" "am"]) ["retarded." "cool."]))))
 
 (deftest test-get-first-words
-  (is (= 1 (count (#'clojure-noob.algos/get-first-words depth1-corpus))))
-  (is (= 3 (count (#'clojure-noob.algos/get-first-words depth3-corpus)))))
+  (is (= 1 (count (#'clojure-noob.algos/get-first-words depth1-chain))))
+  (is (= 3 (count (#'clojure-noob.algos/get-first-words depth3-chain)))))
 
 (deftest test-index-start-words
   (let [hash
@@ -64,8 +64,8 @@
   (let [depth1 (atom {}) depth3 (atom {})]
     (process-text test-data depth1 :depth 1)
     (process-text test-data depth3 :depth 3)
-    (is (= depth1-corpus @depth1))
-    (is (= depth3-corpus @depth3))))
+    (is (= depth1-chain @depth1))
+    (is (= depth3-chain @depth3))))
 
 
 (import '(java.util.concurrent Executors)
@@ -75,11 +75,11 @@
    (+ 2 (.availableProcessors (Runtime/getRuntime)))))
 
 (deftest test-add-word-threadsafe
-  (let [corpus (atom {})]
+  (let [chain (atom {})]
     (dotimes [t 10]
-      (.submit pool #(dotimes [e 100] (add-word ["i"] "word" corpus))))
+      (.submit pool #(dotimes [e 100] (add-word ["i"] "word" chain))))
     (.shutdown pool)
     (.awaitTermination pool 3 TimeUnit/SECONDS)
-    (is (= (count (@corpus ["i"])) 1000))))
+    (is (= (count (@chain ["i"])) 1000))))
 
 
