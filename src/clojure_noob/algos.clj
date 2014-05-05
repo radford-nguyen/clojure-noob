@@ -16,7 +16,8 @@
   The chain also contains a vector of all the first words
   from any sentence in the text at:
   
-  (chain :starter-index)")
+  (chain :starter-index)"
+  (:use [clojure.java.io :only (reader)]))
 
 
 (defn last-of-sentence? [word]
@@ -68,11 +69,9 @@
   (swap! chain update-chain prev-words next-word))
 
 
-(defn- process-word-list
-  
+(defn- process-words
   [word-list, chain
    & {store-first :store-first depth :depth :or {depth 1}}]
-
   (let [prev-words (subvec word-list 0 depth)]
     (if store-first
       (swap! chain index-start-words prev-words))
@@ -91,8 +90,16 @@
   [text & {depth :depth :or {depth 1}}]
   (let [chain (atom {})
         data (words-from (str text))]
-    (process-word-list data chain :depth depth)
+    (process-words data chain :depth depth)
     @chain))
+
+(defn process-file
+  "Processes the given text file and returns a markov chain
+  representing the text. You may specify an optional
+  depth for the chain (default 1)."
+  [f & {depth :depth :or {depth 1}}]
+  (with-open [r (reader f)]
+    (process-text (slurp r) :depth depth)))
 
 ; (defn gen-freq-data [^String from & {nthreads :nthreads :or {nthreads 1}}]
 ;   (let [chain (atom {})]
@@ -113,6 +120,12 @@
   "Returns a random sentence, generated from the given markov chain."
   [chain & {depth :depth :or {depth 1}}]
   (make-sentence-recursive chain (get-first-words chain) depth))
+
+
+(defn lazy-sentence [chain & {depth :markov-depth :or {depth 1}}]
+  (letfn [(f ([] (f (make-sentence chain :depth depth)))
+             ([s] (cons s (lazy-seq (f (make-sentence chain :depth depth))))))]
+    (f)))
 
 
 
