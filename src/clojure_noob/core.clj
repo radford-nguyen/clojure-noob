@@ -8,17 +8,15 @@
 (defn -main
   "Initializes a text-generator from a seed text file (arg 1) and markov depth (arg 2)"
   [& args]
-  (let [seed-f (or (first args) "seed.txt")
+  (let [seed-file (or (first args) "seed.txt")
+        depth (Integer/parseInt (or (second args) "1"))
         quit? #{"q" "quit"}
-        depth (if-let [depth-arg (second args)]
-                (Integer/parseInt depth-arg)
-                1)
-        model (process-file seed-f :depth depth)
-        s (lazy-sentence model :depth depth)]
+        model (process-text (slurp seed-file) :depth depth)
+        sentences (rand-sentences model :markov-depth depth)]
     (prompt)
     (loop [quit (quit? (read-line))
-           rs s]
+           [s & rs] sentences]
       (when-not quit
-        (println (first rs))
-        (recur (quit? (read-line)) (rest rs))))))
+        (println s)
+        (recur (quit? (read-line)) rs)))))
 

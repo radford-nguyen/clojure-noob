@@ -7,7 +7,7 @@
 (def ^:private test-data
   "The cat is happy. The dog is sad. I am retarded.")
 
-(def ^:private depth1-chain
+(def ^:private depth1-model
   {["The"] ["cat" "dog"]
    ["cat"] ["is"]
    ["dog"] ["is"]
@@ -18,7 +18,7 @@
    ["am"] ["retarded."]
    :firsts #{"The" "I"}})
 
-(def ^:private depth3-chain
+(def ^:private depth3-model
   {["The" "cat" "is"] ["happy."]
    ["cat" "is" "happy."] ["The"]
    ["is" "happy." "The"] ["dog"]
@@ -38,11 +38,11 @@
   (is (= 1 (count (words-from "One==Two34Three."))))
   (is (= 3 (count (words-from "One== Two34 Three.")))))
 
-(deftest test-get-word
-  (is (string? (#'clojure-noob.algos/get-word ["The"] depth1-chain)))
-  (is (string? (#'clojure-noob.algos/get-word ["not-in-chain"] depth1-chain)))
-  (is (string? (#'clojure-noob.algos/get-word ["The" "cat" "is"] depth3-chain)))
-  (is (string? (#'clojure-noob.algos/get-word ["not" "in" "chain"] depth3-chain))))
+(deftest test-rand-word
+  (is (string? (#'clojure-noob.algos/rand-word depth1-model ["The"])))
+  (is (string? (#'clojure-noob.algos/rand-word depth1-model ["not-in-model"])))
+  (is (string? (#'clojure-noob.algos/rand-word depth3-model ["The" "cat" "is"])))
+  (is (string? (#'clojure-noob.algos/rand-word depth3-model ["not" "in" "model"]))))
 
 (deftest test-update-model
   (let [key ["I" "am"]
@@ -51,9 +51,9 @@
     (is (= 1 (count hash)))
     (is (= (hash ["I" "am"]) ["retarded." "cool."]))))
 
-(deftest test-get-first-words
-  (is (= 1 (count (#'clojure-noob.algos/get-first-words depth1-chain))))
-  (is (= 3 (count (#'clojure-noob.algos/get-first-words depth3-chain)))))
+(deftest test-rand-lead
+  (is (= 1 (count (#'clojure-noob.algos/rand-lead depth1-model))))
+  (is (= 3 (count (#'clojure-noob.algos/rand-lead depth3-model)))))
 
 (deftest test-index-start-words
   (let [hash
@@ -64,8 +64,8 @@
   (let [depth1 (process-text test-data :depth 1)
         depth3 (process-text test-data :depth 3)]
     
-    (is (= depth1-chain depth1))
-    (is (= depth3-chain depth3))))
+    (is (= depth1-model depth1))
+    (is (= depth3-model depth3))))
 
 
 (import '(java.util.concurrent Executors)
@@ -75,11 +75,11 @@
    (+ 2 (.availableProcessors (Runtime/getRuntime)))))
 
 (deftest test-add-word-threadsafe
-  (let [chain (atom {})]
+  (let [model (atom {})]
     (dotimes [t 10]
-      (.submit pool #(dotimes [e 100] (#'clojure-noob.algos/add-word ["i"] "word" chain))))
+      (.submit pool #(dotimes [e 100] (#'clojure-noob.algos/add-word ["i"] "word" model))))
     (.shutdown pool)
     (.awaitTermination pool 3 TimeUnit/SECONDS)
-    (is (= (count (@chain ["i"])) 1000))))
+    (is (= (count (@model ["i"])) 1000))))
 
 
