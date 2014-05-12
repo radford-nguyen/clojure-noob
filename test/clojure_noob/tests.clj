@@ -1,6 +1,6 @@
 (ns clojure-noob.tests
   (:use clojure.test
-        clojure-noob.algos))
+        clojure-noob.core))
 
 
 
@@ -39,25 +39,25 @@
   (is (= 3 (count (words-from "One== Two34 Three.")))))
 
 (deftest test-rand-word
-  (is (string? (#'clojure-noob.algos/rand-word depth1-model ["The"])))
-  (is (string? (#'clojure-noob.algos/rand-word depth1-model ["not-in-model"])))
-  (is (string? (#'clojure-noob.algos/rand-word depth3-model ["The" "cat" "is"])))
-  (is (string? (#'clojure-noob.algos/rand-word depth3-model ["not" "in" "model"]))))
+  (is (string? (#'clojure-noob.core/rand-word depth1-model ["The"])))
+  (is (string? (#'clojure-noob.core/rand-word depth1-model ["not-in-model"])))
+  (is (string? (#'clojure-noob.core/rand-word depth3-model ["The" "cat" "is"])))
+  (is (string? (#'clojure-noob.core/rand-word depth3-model ["not" "in" "model"]))))
 
 (deftest test-update-model
   (let [key ["I" "am"]
         hash
-        (#'clojure-noob.algos/update-model {key ["retarded."]} ["I" "am"] "cool.")]
+        (#'clojure-noob.core/update-model {key ["retarded."]} ["I" "am"] "cool.")]
     (is (= 1 (count hash)))
     (is (= (hash ["I" "am"]) ["retarded." "cool."]))))
 
 (deftest test-rand-lead
-  (is (= 1 (count (#'clojure-noob.algos/rand-lead depth1-model))))
-  (is (= 3 (count (#'clojure-noob.algos/rand-lead depth3-model)))))
+  (is (= 1 (count (#'clojure-noob.core/rand-lead depth1-model))))
+  (is (= 3 (count (#'clojure-noob.core/rand-lead depth3-model)))))
 
 (deftest test-index-start-words
   (let [hash
-        (#'clojure-noob.algos/index-start-words {} ["i" "am" "sofa" "king" "we" "todd." "did"])]
+        (#'clojure-noob.core/index-start-words {} ["i" "am" "sofa" "king" "we" "todd." "did"])]
     (is (= (hash :firsts) #{"did"}))))
 
 (deftest test-process-text
@@ -77,7 +77,7 @@
 (deftest test-add-word-threadsafe
   (let [model (atom {})]
     (dotimes [t 10]
-      (.submit pool #(dotimes [e 100] (#'clojure-noob.algos/add-word ["i"] "word" model))))
+      (.submit pool #(dotimes [e 100] (#'clojure-noob.core/add-word ["i"] "word" model))))
     (.shutdown pool)
     (.awaitTermination pool 3 TimeUnit/SECONDS)
     (is (= (count (@model ["i"])) 1000))))
