@@ -13,8 +13,8 @@
         depth (if-let [depth-arg (second args)]
                 (Integer/parseInt depth-arg)
                 1)
-        chain (process-file seed-f :depth depth)
-        s (lazy-sentence chain :depth depth)]
+        model (process-file seed-f :depth depth)
+        s (lazy-sentence model :depth depth)]
     (prompt)
     (loop [quit (quit? (read-line))
            rs s]

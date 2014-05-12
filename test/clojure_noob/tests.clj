@@ -16,7 +16,7 @@
    ["happy."] ["The"]
    ["I"] ["am"]
    ["am"] ["retarded."]
-   :starter-index #{"The" "I"}})
+   :firsts #{"The" "I"}})
 
 (def ^:private depth3-chain
   {["The" "cat" "is"] ["happy."]
@@ -27,7 +27,7 @@
    ["dog" "is" "sad."] ["I"]
    ["is" "sad." "I"] ["am"]
    ["sad." "I" "am"] ["retarded."]
-   :starter-index #{"The" "I"}})
+   :firsts #{"The" "I"}})
 
 (deftest test-last-of-sentence?
   (is (last-of-sentence? "end."))
@@ -44,10 +44,10 @@
   (is (string? (#'clojure-noob.algos/get-word ["The" "cat" "is"] depth3-chain)))
   (is (string? (#'clojure-noob.algos/get-word ["not" "in" "chain"] depth3-chain))))
 
-(deftest test-update-chain
+(deftest test-update-model
   (let [key ["I" "am"]
         hash
-        (#'clojure-noob.algos/update-chain {key ["retarded."]} ["I" "am"] "cool.")]
+        (#'clojure-noob.algos/update-model {key ["retarded."]} ["I" "am"] "cool.")]
     (is (= 1 (count hash)))
     (is (= (hash ["I" "am"]) ["retarded." "cool."]))))
 
@@ -58,7 +58,7 @@
 (deftest test-index-start-words
   (let [hash
         (#'clojure-noob.algos/index-start-words {} ["i" "am" "sofa" "king" "we" "todd." "did"])]
-    (is (= (hash :starter-index) #{"did"}))))
+    (is (= (hash :firsts) #{"did"}))))
 
 (deftest test-process-text
   (let [depth1 (process-text test-data :depth 1)
