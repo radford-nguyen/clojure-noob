@@ -3,7 +3,6 @@
         clojure-noob.core))
 
 
-
 (def ^:private test-data
   "The cat is happy. The dog is sad. I am retarded.")
 
@@ -39,26 +38,29 @@
   (is (= 3 (count (words-from "One== Two34 Three.")))))
 
 (deftest test-rand-word
-  (is (string? (#'clojure-noob.core/rand-word depth1-model ["The"])))
-  (is (string? (#'clojure-noob.core/rand-word depth1-model ["not-in-model"])))
-  (is (string? (#'clojure-noob.core/rand-word depth3-model ["The" "cat" "is"])))
-  (is (string? (#'clojure-noob.core/rand-word depth3-model ["not" "in" "model"]))))
+  (let [rand-word #'clojure-noob.core/rand-word]
+    (is (string? (rand-word depth1-model ["The"])))
+    (is (string? (rand-word depth1-model ["not-in-model"])))
+    (is (string? (rand-word depth3-model ["The" "cat" "is"])))
+    (is (string? (rand-word depth3-model ["not" "in" "model"])))))
 
 (deftest test-update-model
-  (let [key ["I" "am"]
-        hash
-        (#'clojure-noob.core/update-model {key ["retarded."]} ["I" "am"] "cool.")]
-    (is (= 1 (count hash)))
-    (is (= (hash ["I" "am"]) ["retarded." "cool."]))))
+  (let [update-model #'clojure-noob.core/update-model
+        lead ["I" "am"]
+        model (update-model {} lead "retarded.")
+        model (update-model model lead "cool.")]
+    (is (= 1 (count model)))
+    (is (= (model lead) ["retarded." "cool."]))))
 
 (deftest test-rand-lead
-  (is (= 1 (count (#'clojure-noob.core/rand-lead depth1-model))))
-  (is (= 3 (count (#'clojure-noob.core/rand-lead depth3-model)))))
+  (let [rand-lead #'clojure-noob.core/rand-lead]
+    (is (= 1 (count (rand-lead depth1-model))))
+    (is (= 3 (count (rand-lead depth3-model))))))
 
-(deftest test-index-start-words
-  (let [hash
-        (#'clojure-noob.core/index-start-words {} ["i" "am" "sofa" "king" "we" "todd." "did"])]
-    (is (= (hash :firsts) #{"did"}))))
+(deftest test-add-first-word
+  (let [add-first-word #'clojure-noob.core/add-first-word
+        model (add-first-word {} "did")]
+    (is (= (model :firsts) #{"did"}))))
 
 (deftest test-process-text
   (let [depth1 (process-text test-data :depth 1)

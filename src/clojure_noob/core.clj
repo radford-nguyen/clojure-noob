@@ -48,20 +48,10 @@
     (rand-nth (rand-nth (keys (dissoc model :firsts))))))
 
 
-(defn- update-model [model, first-words, next-word]
-  (if-let [list-of-next-words (model first-words)]
-    (assoc model first-words (conj list-of-next-words next-word))
-    (assoc model first-words [next-word])))
-
-
-(defn- index-start-words [model, prev-words]
-  "Returns a new markov model with the :firsts
-  updated based on prev-words"
-  (let [first-word (last prev-words)]
-    (if-let [firsts (model :firsts)]
-      (assoc model :firsts (conj firsts first-word))
-      (assoc model :firsts #{first-word}))))
-
+(defn- update-model [model, lead, following]
+  (if-let [list-of-next-words (model lead)]
+    (assoc model lead (conj list-of-next-words following))
+    (assoc model lead [following])))
 
 (defn- add-word[prev-words, next-word, model]
   (swap! model update-model prev-words next-word))
