@@ -70,18 +70,3 @@
     (is (= depth3-model depth3))))
 
 
-(import '(java.util.concurrent Executors)
-        '(java.util.concurrent TimeUnit))
-
-(def pool (Executors/newFixedThreadPool
-   (+ 2 (.availableProcessors (Runtime/getRuntime)))))
-
-(deftest test-add-word-threadsafe
-  (let [model (atom {})]
-    (dotimes [t 10]
-      (.submit pool #(dotimes [e 100] (#'clojure-noob.core/add-word ["i"] "word" model))))
-    (.shutdown pool)
-    (.awaitTermination pool 3 TimeUnit/SECONDS)
-    (is (= (count (@model ["i"])) 1000))))
-
-

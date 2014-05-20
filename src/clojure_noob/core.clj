@@ -47,14 +47,10 @@
     (rand-nth next-words)
     (rand-nth (rand-nth (keys (dissoc model :firsts))))))
 
-
 (defn- update-model [model, lead, following]
   (if-let [list-of-next-words (model lead)]
     (assoc model lead (conj list-of-next-words following))
     (assoc model lead [following])))
-
-(defn- add-word[prev-words, next-word, model]
-  (swap! model update-model prev-words next-word))
 
 (defn- add-first-word
   [model word]
@@ -67,11 +63,13 @@
   (letfn [(f [segs model]
             (if-let [seg (first segs)]
               (let [lead (drop-last seg)
-                    following (last seg)]
-                (add-word lead following model)
-                (if (last-of-sentence? (last lead))
-                  (swap! model add-first-word following))
-                (recur (rest segs) model))))]
+                    following (last seg)
+                    model (update-model model lead following)
+                    model (if (last-of-sentence? (last lead))
+                            (add-first-word model following)
+                            model)]
+                (recur (rest segs) model))
+              model))]
     (f (partition (inc depth) 1 words) model)))
 
 
@@ -79,10 +77,8 @@
   "Processes the given text and returns a markov model
   representing that text."
   [text & {depth :depth :or {depth 1}}]
-  (let [model (atom {})
-        words (words-from (str text))]
-    (process-words model depth words)
-    @model))
+  (let [words (words-from (str text))]
+    (process-words {} depth words)))
 
 (defn- next-lead [model lead]
   (let [not-end (comp not last-of-sentence?)]
