@@ -76,7 +76,7 @@
 (defn process-text
   "Processes the given text and returns a markov model
   representing that text."
-  [text & {depth :depth :or {depth 1}}]
+  [text depth]
   (let [words (words-from (str text))]
     (process-words {} depth words)))
 
@@ -88,7 +88,7 @@
 
 (defn rand-sentence
   "Returns a random sentence, generated from the given markov model."
-  [model & {depth :depth :or {depth 1}}]
+  [model]
   (letfn [(sentence [lead]
             (if-let [lead (seq lead)]
               (let [this-w (first lead)
@@ -97,12 +97,13 @@
     (sentence (rand-lead model))))
 
 
-(defn rand-sentences [model & {depth :markov-depth :or {depth 1}}]
-  "Returns an infinite lazy sequence of random sentences,
-  generated from the given markov model."
-  (letfn [(f ([] (f (rand-sentence model :depth depth)))
-             ([s] (cons s (lazy-seq (f (rand-sentence model :depth depth))))))]
-    (f)))
+(defn sentence-seq
+  ([model]
+   "Returns an infinite lazy sequence of random sentences,
+   generated from the given markov model."
+   (sentence-seq model (rand-sentence model)))
+  ([model s]
+   (cons s (lazy-seq (sentence-seq model (rand-sentence model))))))
 
 
 
@@ -115,8 +116,8 @@
   (let [seed-file (or (first args) "seed.txt")
         depth (Integer/parseInt (or (second args) "1"))
         quit? #{"q" "quit"}
-        model (process-text (slurp seed-file) :depth depth)
-        sentences (rand-sentences model :markov-depth depth)]
+        model (process-text (slurp seed-file) depth)
+        sentences (sentence-seq model)]
     (prompt)
     (loop [quit (quit? (read-line))
            [s & rs] sentences]

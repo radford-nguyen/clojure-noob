@@ -63,10 +63,20 @@
     (is (= (model :firsts) #{"did"}))))
 
 (deftest test-process-text
-  (let [depth1 (process-text test-data :depth 1)
-        depth3 (process-text test-data :depth 3)]
-    
+  (let [depth1 (process-text test-data 1)
+        depth3 (process-text test-data 3)]
     (is (= depth1-model depth1))
     (is (= depth3-model depth3))))
+
+(deftest test-sentence-seq
+  (let [depth1 (process-text test-data 1)
+        depth3 (process-text test-data 3)
+        s1 (take 4 (sentence-seq depth1))
+        s3 (take 4 (sentence-seq depth3))
+        r1 (map #(last-of-sentence? (last %)) s1)
+        r3 (map #(last-of-sentence? (last %)) s1)]
+    (is (every? identity r1))
+    (is (every? identity r3))))
+
 
 
